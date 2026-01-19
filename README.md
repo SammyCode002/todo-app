@@ -89,3 +89,6 @@ todo_app/
 ## License
 
 MIT License - Free to use for educational purposes.
+
+## Author
+Samuel Dameg
