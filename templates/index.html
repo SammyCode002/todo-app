@@ -1,0 +1,24 @@
+📝 My To-Do List
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
+{% for category, message in messages %}
+{{ message }}
+{% endfor %}
+{% endif %} {% endwith %}
+New Task
+Enter your task here...
+Add Task
+{% if tasks %}
+{% for task in tasks %}
+
+{{ task.text }}
+{% if task.completed %}✓ Done{% else %}⏳ Pending{% endif %}
+Delete
+{% endfor %}
+{{ tasks | selectattr('completed', 'equalto', false) | list | length }} of {{ tasks | length }} tasks remaining
+
+{% else %}
+No tasks yet!
+
+Add a task above to get started.
+
+{% endif %}
