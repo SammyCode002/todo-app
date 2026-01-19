@@ -1,24 +1,156 @@
-📝 My To-Do List
-{% with messages = get_flashed_messages(with_categories=true) %} {% if messages %}
-{% for category, message in messages %}
-{{ message }}
-{% endfor %}
-{% endif %} {% endwith %}
-New Task
-Enter your task here...
-Add Task
-{% if tasks %}
-{% for task in tasks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .flash {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .flash.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .flash.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .add-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .add-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .add-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+        .add-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-form button:hover {
+            background-color: #2980b9;
+        }
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .task-item.completed {
+            background: #e8f5e9;
+        }
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #888;
+        }
+        .task-text {
+            flex: 1;
+            margin: 0 15px;
+        }
+        .btn-complete {
+            padding: 5px 10px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn-delete {
+            padding: 5px 10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .empty-state {
+            text-align: center;
+            color: #888;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
 
-{{ task.text }}
-{% if task.completed %}✓ Done{% else %}⏳ Pending{% endif %}
-Delete
-{% endfor %}
-{{ tasks | selectattr('completed', 'equalto', false) | list | length }} of {{ tasks | length }} tasks remaining
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-{% else %}
-No tasks yet!
+        <form action="/add" method="POST" class="add-form">
+            <div style="flex:1;">
+                <label for="task">New Task</label>
+                <input type="text" id="task" name="task" placeholder="Enter your task here...">
+            </div>
+            <button type="submit" style="align-self: flex-end;">Add Task</button>
+        </form>
 
-Add a task above to get started.
-
-{% endif %}
+        {% if tasks %}
+            <ul class="task-list">
+                {% for task in tasks %}
+                    <li class="task-item {% if task.completed %}completed{% endif %}">
+                        <a href="/complete/{{ task.id }}">
+                            <button class="btn-complete">{% if task.completed %}Undo{% else %}Done{% endif %}</button>
+                        </a>
+                        <span class="task-text">{{ task.text }}</span>
+                        <a href="/delete/{{ task.id }}">
+                            <button class="btn-delete">Delete</button>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty-state">
+                <p>No tasks yet! Add one above.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
