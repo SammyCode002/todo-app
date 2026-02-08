@@ -84,10 +84,6 @@ todo_app/
 - ARIA labels for interactive elements
 - Sufficient color contrast
 
-## Screenshots
-
-(Add screenshots here for your assignment)
-
 ---
 
 ## Inclusivity Heuristics Mapping
