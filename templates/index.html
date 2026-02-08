@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Main container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Header */
+        header {
+            background: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        /* IH#1: App description explaining benefits */
+        .app-description {
+            background: #e8f4fc;
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #555;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Main content area */
+        main {
+            padding: 25px;
+        }
+
+        /* Flash messages */
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash {
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .flash.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Add task form */
+        .add-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .form-group input[type="text"] {
+            padding: 12px 15px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        /* IH#7: Hint text for multiple approaches */
+        .input-hint {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:focus {
+            outline: 3px solid #2980b9;
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        /* Task list */
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .task-item:hover {
+            background: #f0f0f0;
+        }
+
+        .task-item.completed {
+            background: #e8f5e9;
+            border-color: #c8e6c9;
+        }
+
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+            accent-color: #27ae60;
+        }
+
+        .task-checkbox:focus {
+            outline: 3px solid #2980b9;
+            outline-offset: 2px;
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .task-status {
+            margin-right: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 3px;
+        }
+
+        .status-complete {
+            background: #27ae60;
+            color: white;
+        }
+
+        .status-pending {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        /* Task count */
+        .task-count {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Accessibility: Skip link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #3498db;
+            color: white;
+            padding: 8px 15px;
+            z-index: 100;
+            text-decoration: none;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .add-form {
+                flex-direction: column;
+            }
+
+            .btn-primary {
+                align-self: stretch;
+            }
+
+            .task-item {
+                flex-wrap: wrap;
+            }
+
+            .task-status {
+                order: 3;
+                margin-top: 10px;
+                margin-right: 10px;
+            }
+
+            .btn-delete {
+                order: 4;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip link for keyboard users -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="container">
+        <header>
+            <h1>📝 My To-Do List</h1>
+        </header>
+
+        <!-- IH#1: Explain benefits of using the app -->
+        <div class="app-description">
+            Keep track of your tasks in one place. Add tasks, mark them done, and stay organized.
+        </div>
+
+        <main id="main-content">
+            <!-- Flash Messages - IH#1 (success) and IH#2 (errors) -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages" role="alert" aria-live="polite">
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">
+                                {% if category == 'success' %}✓{% else %}⚠{% endif %} {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <!-- Add Task Form - IH#6: Clear path -->
+            <form action="{{ url_for('add_task') }}" method="POST" class="add-form">
+                <div class="form-group">
+                    <label for="task-input">New Task</label>
+                    <input 
+                        type="text" 
+                        id="task-input" 
+                        name="task" 
+                        placeholder="What do you need to do?"
+                        aria-describedby="task-help"
+                        autocomplete="off"
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary">Add Task</button>
+            </form>
+            
+            <!-- IH#7: Multiple ways to perform same action -->
+            <p class="input-hint">Press Enter or click Add Task to add.</p>
+
+            <!-- Task List -->
+            {% if tasks %}
+                <ul class="task-list" aria-label="Task list">
+                    {% for task in tasks %}
+                        <li class="task-item {% if task.completed %}completed{% endif %}">
+                            <!-- IH#4: Familiar checkbox, IH#5: Toggle to undo -->
+                            <input 
+                                type="checkbox" 
+                                class="task-checkbox"
+                                {% if task.completed %}checked{% endif %}
+                                onclick="window.location.href='{{ url_for('complete_task', task_id=task.id) }}'"
+                                aria-label="{% if task.completed %}Mark '{{ task.text }}' as incomplete{% else %}Mark '{{ task.text }}' as complete{% endif %}"
+                            >
+                            <span class="task-text">{{ task.text }}</span>
+                            <!-- IH#3: Status info -->
+                            <span class="task-status {% if task.completed %}status-complete{% else %}status-pending{% endif %}">
+                                {% if task.completed %}✓ Done{% else %}⏳ Pending{% endif %}
+                            </span>
+                            <!-- IH#8: Confirmation before destructive action -->
+                            <button 
+                                type="button"
+                                class="btn btn-delete"
+                                onclick="if(confirm('Delete this task? This cannot be undone.')) window.location.href='{{ url_for('delete_task', task_id=task.id) }}'"
+                                aria-label="Delete task: {{ task.text }}"
+                            >
+                                Delete
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <!-- IH#3: Progress info -->
+                <p class="task-count">
+                    {{ tasks | selectattr('completed', 'equalto', false) | list | length }} of {{ tasks | length }} tasks remaining
+                </p>
+            {% else %}
+                <!-- IH#1: Explain benefit in empty state -->
+                <div class="empty-state">
+                    <p><strong>No tasks yet!</strong></p>
+                    <p>Add a task above to get started.</p>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>
