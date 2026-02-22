@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My To-Do List</title>
+    <title>BeaverTasks - To-Do List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
@@ -12,60 +13,71 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
         }
 
+        /* Header */
         header {
-            background: #4a9fd4;
-            color: white;
-            padding: 20px;
             text-align: center;
+            margin-bottom: 30px;
             position: relative;
         }
 
         header h1 {
-            font-size: 24px;
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
         }
 
-        /* IH#3: Help button to gather/avoid information */
+        header h1 span {
+            background: linear-gradient(90deg, #DC4405, #FF6B2B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* IH#3: Help button */
         .help-btn {
             position: absolute;
-            right: 15px;
+            right: 0;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(255,255,255,0.2);
-            border: 2px solid white;
-            color: white;
-            width: 32px;
-            height: 32px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: #fff;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .help-btn:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.2);
+            border-color: #DC4405;
+            color: #DC4405;
         }
 
-        /* IH#3: Help panel - hidden by default (avoid info), shown on click (gather info) */
+        /* IH#3: Help panel */
         .help-panel {
             display: none;
-            background: #e3f2fd;
-            padding: 15px 20px;
-            border-bottom: 1px solid #bbdefb;
+            background: rgba(220, 68, 5, 0.1);
+            border: 1px solid rgba(220, 68, 5, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
         }
 
         .help-panel.show {
@@ -74,116 +86,135 @@
 
         .help-panel h3 {
             font-size: 16px;
-            color: #1565c0;
-            margin-bottom: 10px;
+            color: #DC4405;
+            margin-bottom: 12px;
         }
 
         .help-panel ul {
             margin-left: 20px;
             font-size: 14px;
-            color: #333;
+            color: rgba(255,255,255,0.8);
         }
 
         .help-panel li {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .help-panel .close-help {
-            margin-top: 10px;
-            background: #1565c0;
-            color: white;
+            margin-top: 15px;
+            background: #DC4405;
+            color: #fff;
             border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .help-panel .close-help:hover {
-            background: #0d47a1;
+            background: #FF6B2B;
         }
 
-        /* IH#1: Explain benefits to users */
+        /* IH#1: App description */
         .app-description {
-            background: #e8f4fc;
-            padding: 12px 20px;
+            text-align: center;
+            color: rgba(255,255,255,0.6);
             font-size: 14px;
-            color: #555;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 30px;
         }
 
-        main {
-            padding: 20px;
+        /* Main card */
+        .main-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
         }
 
-        /* Flash messages for IH#1 (success) and IH#2 (errors) */
+        /* Flash messages */
         .flash-message {
-            padding: 12px 15px;
-            border-radius: 5px;
-            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             font-size: 14px;
+            font-weight: 500;
         }
 
         .flash-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: rgba(220, 68, 5, 0.15);
+            color: #FF6B2B;
+            border: 1px solid rgba(220, 68, 5, 0.3);
         }
 
         .flash-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.3);
         }
 
-        /* IH#6: Clear labels for explicit path */
+        /* IH#6: Add section */
         .add-section label {
             display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 14px;
         }
 
         .add-section .input-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .add-section input[type="text"] {
             flex: 1;
-            padding: 12px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+            padding: 14px 18px;
+            font-size: 15px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .add-section input[type="text"]::placeholder {
+            color: rgba(255,255,255,0.4);
         }
 
         .add-section input[type="text"]:focus {
             outline: none;
-            border-color: #4a9fd4;
+            border-color: #DC4405;
+            background: rgba(220, 68, 5, 0.1);
         }
 
-        /* IH#6: Clear button text */
         .add-section button {
-            background: #4a9fd4;
-            color: white;
+            background: linear-gradient(135deg, #DC4405, #FF6B2B);
+            color: #fff;
             border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 5px;
+            padding: 14px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .add-section button:hover {
-            background: #3a8fc4;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(220, 68, 5, 0.3);
         }
 
-        /* IH#7: Hint about alternative approach */
+        /* IH#7: Input hint */
         .input-hint {
             font-size: 12px;
-            color: #888;
-            margin-top: 6px;
+            color: rgba(255,255,255,0.4);
+            margin-top: 10px;
         }
 
+        /* Task list */
         .task-list {
             margin-top: 25px;
         }
@@ -191,107 +222,132 @@
         .task-item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            background: #fafafa;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: rgba(255,255,255,0.03);
+            transition: all 0.3s ease;
         }
 
-        .task-item.done {
-            background: #e8f5e9;
+        .task-item:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.2);
         }
 
-        /* IH#4: Familiar checkbox */
+        .task-item.completed {
+            background: rgba(220, 68, 5, 0.05);
+            border-color: rgba(220, 68, 5, 0.2);
+        }
+
+        /* IH#4: Custom checkbox */
         .task-item input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
-            margin-right: 12px;
+            width: 24px;
+            height: 24px;
+            margin-right: 14px;
             cursor: pointer;
+            accent-color: #DC4405;
         }
 
         .task-text {
             flex: 1;
-            font-size: 16px;
+            font-size: 15px;
+            color: #fff;
         }
 
-        .task-item.done .task-text {
+        .task-item.completed .task-text {
             text-decoration: line-through;
-            color: #888;
+            color: rgba(255,255,255,0.4);
         }
 
         .task-status {
-            margin-right: 15px;
-            font-size: 13px;
-            padding: 4px 10px;
-            border-radius: 12px;
+            margin-right: 12px;
+            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .status-done {
-            background: #c8e6c9;
-            color: #2e7d32;
+            background: rgba(220, 68, 5, 0.15);
+            color: #FF6B2B;
         }
 
         .status-pending {
-            background: #fff3e0;
-            color: #e65100;
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
         }
 
-        /* IH#8: Delete with confirmation */
+        /* IH#8: Delete button */
         .delete-btn {
-            background: #e53935;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
+            background: rgba(255, 71, 87, 0.15);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            padding: 8px 14px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
         .delete-btn:hover {
-            background: #c62828;
+            background: #ff4757;
+            color: #fff;
         }
 
-        /* Empty state - IH#1 */
+        /* Empty state */
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
-            color: #888;
+            padding: 50px 20px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
         }
 
         .empty-state p {
             margin-bottom: 8px;
+            font-size: 15px;
         }
 
-        /* IH#3: Task counter for progress info */
+        /* IH#3: Task counter */
         .task-counter {
             text-align: center;
-            padding: 15px;
-            color: #666;
+            padding: 20px;
+            color: rgba(255,255,255,0.5);
             font-size: 14px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(255,255,255,0.1);
             margin-top: 20px;
         }
 
-        /* IH#2: Cost info in footer */
+        .task-counter strong {
+            color: #DC4405;
+        }
+
+        /* IH#2: Cost info footer */
         .cost-info {
-            background: #fff8e1;
-            padding: 10px 15px;
-            font-size: 12px;
-            color: #6d5c00;
             text-align: center;
+            margin-top: 20px;
+            padding: 12px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.3);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📝 My To-Do List</h1>
-            <!-- IH#3: Help button - allows users to gather more info when needed -->
+            <h1>🦫 <span>BeaverTasks</span></h1>
+            <!-- IH#3: Help button -->
             <button class="help-btn" onclick="toggleHelp()" title="Click for help">?</button>
         </header>
 
-        <!-- IH#3: Help panel - hidden by default (avoid info), click to show (gather info) -->
+        <!-- IH#3: Help panel -->
         <div class="help-panel" id="helpPanel">
             <h3>📖 How to Use This App</h3>
             <ul>
@@ -303,13 +359,11 @@
             <button class="close-help" onclick="toggleHelp()">Got it, close help</button>
         </div>
 
-        <!-- IH#1: Explain the benefit of using this app -->
-        <div class="app-description">
-            Keep track of your tasks in one place. Add tasks, mark them done, and stay organized.
-        </div>
+        <!-- IH#1: App description -->
+        <p class="app-description">Stay busy like a beaver. Get things done. Go Beavs! 🧡🖤</p>
 
-        <main>
-            <!-- Flash messages for IH#1 (benefits/success) and IH#2 (costs/errors) -->
+        <div class="main-card">
+            <!-- Flash messages -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% for category, message in messages %}
                     <div class="flash-message flash-{{ category }}">
@@ -318,34 +372,35 @@
                 {% endfor %}
             {% endwith %}
 
-            <!-- IH#6: Clear path with labeled input -->
+            <!-- IH#6: Add section -->
             <div class="add-section">
                 <label for="task-input">New Task</label>
                 <form action="/add" method="POST" class="input-row">
                     <input type="text" 
                            id="task-input" 
                            name="task" 
-                           placeholder="What do you need to do?"
+                           placeholder="What needs to be done?"
                            autofocus>
                     <button type="submit">Add Task</button>
                 </form>
                 <!-- IH#7: Multiple ways to submit -->
-                <p class="input-hint">Press Enter or click Add Task to add.</p>
+                <p class="input-hint">💡 Press Enter or click Add Task to add</p>
             </div>
 
             <div class="task-list">
                 {% if tasks %}
                     {% for task in tasks %}
-                        <div class="task-item {% if task.done %}done{% endif %}">
+                        <div class="task-item {% if task.completed %}completed{% endif %}">
                             <!-- IH#4: Familiar checkbox, IH#5: Toggle to undo -->
                             <input type="checkbox" 
-                                   {% if task.done %}checked{% endif %}
-                                   onchange="window.location.href='/toggle/{{ task.id }}'">
+                                   id="task-{{ task.id }}"
+                                   {% if task.completed %}checked{% endif %}
+                                   onchange="window.location.href='/complete/{{ task.id }}'">
                             <span class="task-text">{{ task.text }}</span>
-                            <span class="task-status {% if task.done %}status-done{% else %}status-pending{% endif %}">
-                                {% if task.done %}Done{% else %}Pending{% endif %}
+                            <span class="task-status {% if task.completed %}status-done{% else %}status-pending{% endif %}">
+                                {% if task.completed %}Done{% else %}Pending{% endif %}
                             </span>
-                            <!-- IH#8: Confirm before destructive action -->
+                            <!-- IH#8: Confirm before delete -->
                             <button class="delete-btn" 
                                     onclick="if(confirm('Delete this task? This cannot be undone.')) window.location.href='/delete/{{ task.id }}'">
                                 Delete
@@ -353,30 +408,30 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <!-- IH#1: Explain benefit in empty state -->
                     <div class="empty-state">
-                        <p><strong>No tasks yet!</strong></p>
-                        <p>Add a task above to get started.</p>
+                        <div class="icon">✨</div>
+                        <p><strong>All clear!</strong></p>
+                        <p>Add a task to get started</p>
                     </div>
                 {% endif %}
             </div>
 
             {% if tasks %}
-                <!-- IH#3: Let users gather progress info -->
+                <!-- IH#3: Task counter -->
                 <div class="task-counter">
-                    {{ pending }} of {{ total }} task{% if total != 1 %}s{% endif %} remaining
+                    <strong>{{ tasks|selectattr('completed', 'equalto', false)|list|length }}</strong> of <strong>{{ tasks|length }}</strong> task{% if tasks|length != 1 %}s{% endif %} remaining
                 </div>
             {% endif %}
-        </main>
+        </div>
 
-        <!-- IH#2: Inform users about costs/limitations -->
+        <!-- IH#2: Cost info -->
         <div class="cost-info">
-            Note: Tasks are stored temporarily. Refreshing the page after restarting the app will clear your list.
+            Tasks are saved locally. Your data stays on this device.
         </div>
     </div>
 
     <script>
-        // IH#3: Toggle help panel - allows users to avoid info (hidden) or gather info (shown)
+        // IH#3: Toggle help panel
         function toggleHelp() {
             var helpPanel = document.getElementById('helpPanel');
             helpPanel.classList.toggle('show');
