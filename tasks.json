@@ -1,12 +1,12 @@
 [
   {
-    "id": 4,
-    "text": "Clean room",
-    "completed": false
+    "id": 1,
+    "text": "Clean Room",
+    "completed": true
   },
   {
-    "id": 4,
-    "text": "The end",
-    "completed": false
+    "id": 2,
+    "text": "Call Mom",
+    "completed": true
   }
 ]
