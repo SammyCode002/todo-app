@@ -4,13 +4,21 @@ Returns current weather data for a given city using OpenWeatherMap API.
 Runs on port 5001.
 """
 
+import os
+
 import requests
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request
+
+load_dotenv()
 
 app = Flask(__name__)
 
-API_KEY = "3ae3cb556a04364cb35aa98f36887ef0"
+API_KEY = os.getenv("OPENWEATHER_API_KEY")
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
+
+if not API_KEY:
+    raise ValueError("OPENWEATHER_API_KEY is missing")
 
 
 @app.get("/weather")
