@@ -28,3 +28,4 @@ instance/
 # Data file (optional - remove if you want to track tasks)
 # tasks.json
 .env
+.env
