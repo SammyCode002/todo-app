@@ -1,150 +1,135 @@
 # To-Do List Application
-CS361 - Assignment 5: Milestone #1  
-Samuel Dameg
 
-A simple, accessible to-do list web application built with Flask.
+A productivity web app built with Flask that integrates with four microservices for weather data, task statistics, reminders, and data export.
 
-## Features (Sprint 1)
+## Features
 
-- ✅ **Add Task** - Create new tasks with a simple form
-- ✅ **View Tasks** - See all your tasks in a clean list
-- ✅ **Complete Task** - Mark tasks as done (with visual feedback)
-- ✅ **Delete Task** - Remove tasks you no longer need
+- **Task Management** - Add, complete, and delete tasks
+- **Weather Widget** - Real-time weather data for any city via OpenWeatherMap API
+- **Task Statistics** - Productivity stats including completion percentage and task counts
+- **Reminders** - Set and view upcoming task reminders with date/time
+- **Data Export** - Export tasks to JSON or plain text format
+- **Help Panel** - Built-in instructions for new users
+- **Dark Theme** - OSU Beavers orange and black styling
 
-## Setup Instructions
+## Architecture
 
-### 1. Make sure you have Python installed
+The main program communicates with four independent microservices through HTTP requests. No direct function calls between programs.
 
-```bash
-python --version
 ```
-
-You need Python 3.7 or higher.
-
-### 2. Create a virtual environment (recommended)
-
-```bash
-# Create virtual environment
-python -m venv venv
-
-# Activate it
-# On Windows:
-venv\Scripts\activate
-
-# On Mac/Linux:
-source venv/bin/activate
+Main Program (port 5000)
+    |
+    |-- Data Export Service (port 5001) - Small Pool
+    |-- Task Statistics Service (port 5002) - Big Pool
+    |-- Reminder Service (port 5003) - Big Pool
+    |-- Weather Service (port 5004) - Big Pool
 ```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Run the application
-
-```bash
-python app.py
-```
-
-### 5. Open in your browser
-
-Go to: **http://127.0.0.1:5000**
 
 ## Project Structure
 
 ```
-todo_app/
-├── app.py              # Main Flask application
-├── requirements.txt    # Python dependencies
-├── tasks.json          # Task storage (created automatically)
+todo_app_CS361/
+├── app.py                          # Main Flask application
+├── tasks.json                      # Task storage (auto-created)
+├── requirements.txt                # Python dependencies
+├── .gitignore                      # Excludes .env files
 ├── templates/
-│   └── index.html      # HTML template
-└── README.md           # This file
+│   └── index.html                  # HTML template with all widgets
+├── weather_service/
+│   ├── app.py                      # Weather microservice
+│   └── .env                        # API key (not tracked)
+├── task_statistics_service/
+│   └── app.py                      # Task statistics microservice
+├── reminder_service/
+│   └── app.py                      # Reminder microservice
+└── README.md
 ```
 
-## Quality Attributes Implemented
+## Setup
 
-### Usability
-- Clean, intuitive interface
-- Clear labels on all form inputs
-- Immediate feedback via flash messages
-- Task count shows progress
+1. Make sure you have Python 3.7+ installed
 
-### Reliability
-- Tasks persist in JSON file
-- Consistent display on every page load
-- Error handling for empty task submission
+2. Install dependencies
 
-### Accessibility
-- Proper HTML labels for all inputs
-- Keyboard navigation support (Tab, Enter)
-- Skip link for screen reader users
-- Visual indicators don't rely solely on color (✓ Done / ⏳ Pending labels)
-- ARIA labels for interactive elements
-- Sufficient color contrast
+```
+pip install flask requests python-dotenv
+```
 
----
+3. Set up the Weather Service API key
 
-## Inclusivity Heuristics Mapping
+Create a `.env` file in `weather_service/` with your OpenWeatherMap API key:
 
-| IH# | Heuristic | Where It's Reflected |
-|-----|-----------|---------------------|
-| 1 | Explain benefits | App description at top + success messages + empty state text |
-| 2 | Explain costs | Error message for empty input ("Please enter a task description") |
-| 3 | Gather info (no more, no less) | Task counter shows "X of Y tasks remaining" + status labels |
-| 4 | Familiar features | Standard checkbox for completion (like other to-do apps) |
-| 5 | Undo/backtracking | Can uncheck a task to mark it pending again |
-| 6 | Explicit path | Clear "New Task" label + "Add Task" button |
-| 7 | Try different approaches | "Press Enter or click Add Task to add" hint text |
-| 8 | Tinker mindfully | Confirmation popup before deleting a task |
+```
+OPENWEATHER_API_KEY=your_api_key_here
+```
 
----
+Get a free key at https://openweathermap.org/api
 
-## User Stories (3 Completed)
+4. Start all services (each in a separate terminal)
 
-### User Story 1: Add a Task
-**As a user, I can add a task so I can keep track of things I need to do.**
+```
+# Terminal 1 - Data Export (port 5001)
+cd data-export-microservice
+python app.py
 
-Acceptance Criteria:
-- Given I'm on the main page
-- When I type a task and click "Add Task" (or press Enter)
-- Then the task appears in my list with a success message
+# Terminal 2 - Task Statistics (port 5002)
+cd task_statistics_service
+python app.py
 
-### User Story 2: Complete a Task
-**As a user, I can mark a task as complete so I can track my progress.**
+# Terminal 3 - Reminder Service (port 5003)
+cd reminder_service
+python app.py
 
-Acceptance Criteria:
-- Given I have a task in my list
-- When I click the checkbox
-- Then the task shows as "Done" with strikethrough
+# Terminal 4 - Weather Service (port 5004)
+cd weather_service
+python app.py
 
-### User Story 3: Delete a Task
-**As a user, I can delete a task so I can remove items I no longer need.**
+# Terminal 5 - Main App (port 5000)
+python app.py
+```
 
-Acceptance Criteria:
-- Given I have a task in my list
-- When I click "Delete" and confirm
-- Then the task is removed from my list
+5. Open http://localhost:5000 in your browser
 
----
+## Microservices
 
-## Quality Attributes (3)
+### Data Export (Small Pool) - Port 5001
 
-### 1. Usability
-**Requirement:** Each Inclusivity Heuristic is reflected in the UI.  
-**How it's met:** All 8 IH are implemented (see table above).
+Exports task data to JSON or plain text format.
 
-### 2. Responsiveness  
-**Requirement:** Page loads in under 2 seconds.  
-**How it's met:** Simple HTML/CSS, no heavy frameworks. Page loads instantly.
+- `POST /export` - Export tasks with `data` and `format` parameters
 
-### 3. Maintainability
-**Requirement:** Code is organized and functions are short.  
-**How it's met:** Each route function does one thing, clear naming, organized file structure.
+### Weather Service (Big Pool) - Port 5004
 
----
+Returns current weather data for any city using OpenWeatherMap API.
+
+- `GET /weather?city=Seattle` - Get weather for a city
+
+### Task Statistics (Big Pool) - Port 5002
+
+Calculates productivity stats from a task list.
+
+- `POST /stats` - Get total, completed, pending, and completion percentage
+- `POST /stats/breakdown` - Get tasks separated by status
+
+### Reminder Service (Big Pool) - Port 5003
+
+Set and retrieve upcoming task reminders.
+
+- `POST /reminder` - Set a reminder with task_id, reminder_time, message
+- `GET /reminders` - Get all reminders sorted by time
+- `GET /reminders?task_id=1` - Get reminders for a specific task
+
+## Tech Stack
+
+- Python, Flask
+- HTML, CSS, Jinja2
+- OpenWeatherMap API
+- JSON file storage
+
+## Developer
+
+Samuel Dameg
 
 ## License
 
-MIT License - Free to use for educational purposes.
+MIT License
