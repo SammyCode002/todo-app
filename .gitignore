@@ -25,7 +25,7 @@ instance/
 .env
 *.env
 
-# Data file (optional - remove if you want to track tasks)
-# tasks.json
-.env
-.env
+# Data
+tasks.json
+*.db
+*.sqlite3

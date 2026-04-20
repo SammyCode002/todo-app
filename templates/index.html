@@ -3,744 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My To-Do List</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2d2d2d 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        header h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.5px;
-        }
-
-        header h1 span {
-            background: linear-gradient(90deg, #DC4405, #FF6B2B);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .help-btn {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.1);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: #fff;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .help-btn:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: #DC4405;
-            color: #DC4405;
-        }
-
-        .help-panel {
-            display: none;
-            background: rgba(220, 68, 5, 0.1);
-            border: 1px solid rgba(220, 68, 5, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .help-panel.show {
-            display: block;
-        }
-
-        .help-panel h3 {
-            font-size: 16px;
-            color: #DC4405;
-            margin-bottom: 12px;
-        }
-
-        .help-panel ul {
-            margin-left: 20px;
-            font-size: 14px;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .help-panel li {
-            margin-bottom: 8px;
-        }
-
-        .help-panel .close-help {
-            margin-top: 15px;
-            background: #DC4405;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .help-panel .close-help:hover {
-            background: #FF6B2B;
-        }
-
-        .app-description {
-            text-align: center;
-            color: rgba(255,255,255,0.6);
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .widget-row {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .widget {
-            flex: 1;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 14px;
-            padding: 16px;
-            backdrop-filter: blur(10px);
-        }
-
-        .widget-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .weather-widget .weather-temp {
-            font-size: 28px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .weather-widget .weather-desc {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            margin-top: 2px;
-            text-transform: capitalize;
-        }
-
-        .weather-widget .weather-city {
-            font-size: 12px;
-            color: #DC4405;
-            margin-top: 6px;
-            font-weight: 600;
-        }
-
-        .weather-widget .weather-details {
-            font-size: 11px;
-            color: rgba(255,255,255,0.4);
-            margin-top: 4px;
-        }
-
-        .weather-form {
-            display: flex;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        .weather-form input {
-            flex: 1;
-            padding: 6px 10px;
-            font-size: 12px;
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 6px;
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-        }
-
-        .weather-form input::placeholder {
-            color: rgba(255,255,255,0.3);
-        }
-
-        .weather-form input:focus {
-            outline: none;
-            border-color: #DC4405;
-        }
-
-        .weather-form button {
-            padding: 6px 10px;
-            font-size: 11px;
-            font-weight: 600;
-            border: none;
-            border-radius: 6px;
-            background: #DC4405;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .weather-unavailable {
-            color: rgba(255,255,255,0.4);
-            font-size: 13px;
-        }
-
-        .stats-widget .stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #DC4405;
-        }
-
-        .stats-widget .stat-label {
-            font-size: 13px;
-            color: rgba(255,255,255,0.6);
-            margin-top: 2px;
-        }
-
-        .stats-widget .stat-row {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            font-size: 12px;
-            color: rgba(255,255,255,0.5);
-        }
-
-        .stats-widget .stat-row span:last-child {
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .main-card {
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 25px;
-        }
-
-        .flash-message {
-            padding: 12px 16px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .flash-success {
-            background: rgba(220, 68, 5, 0.15);
-            color: #FF6B2B;
-            border: 1px solid rgba(220, 68, 5, 0.3);
-        }
-
-        .flash-error {
-            background: rgba(255, 71, 87, 0.15);
-            color: #ff4757;
-            border: 1px solid rgba(255, 71, 87, 0.3);
-        }
-
-        .add-section label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .add-section .input-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        .add-section input[type="text"] {
-            flex: 1;
-            padding: 14px 18px;
-            font-size: 15px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            transition: all 0.3s ease;
-        }
-
-        .add-section input[type="text"]::placeholder {
-            color: rgba(255,255,255,0.4);
-        }
-
-        .add-section input[type="text"]:focus {
-            outline: none;
-            border-color: #DC4405;
-            background: rgba(220, 68, 5, 0.1);
-        }
-
-        .add-section button {
-            background: linear-gradient(135deg, #DC4405, #FF6B2B);
-            color: #fff;
-            border: none;
-            padding: 14px 24px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .add-section button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(220, 68, 5, 0.3);
-        }
-
-        .input-hint {
-            font-size: 12px;
-            color: rgba(255,255,255,0.4);
-            margin-top: 10px;
-        }
-
-        .task-list {
-            margin-top: 25px;
-        }
-
-        .task-item {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            margin-bottom: 12px;
-            background: rgba(255,255,255,0.03);
-            transition: all 0.3s ease;
-        }
-
-        .task-item:hover {
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(255,255,255,0.2);
-        }
-
-        .task-item.completed {
-            background: rgba(220, 68, 5, 0.05);
-            border-color: rgba(220, 68, 5, 0.2);
-        }
-
-        .task-checkbox {
-            text-decoration: none;
-            margin-right: 14px;
-            font-size: 24px;
-            color: rgba(255,255,255,0.5);
-            transition: all 0.2s ease;
-        }
-
-        .task-checkbox:hover {
-            color: #DC4405;
-        }
-
-        .task-item.completed .task-checkbox {
-            color: #DC4405;
-        }
-
-        .task-text {
-            flex: 1;
-            font-size: 15px;
-            color: #fff;
-        }
-
-        .task-item.completed .task-text {
-            text-decoration: line-through;
-            color: rgba(255,255,255,0.4);
-        }
-
-        .task-status {
-            margin-right: 12px;
-            font-size: 11px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-done {
-            background: rgba(220, 68, 5, 0.15);
-            color: #FF6B2B;
-        }
-
-        .status-pending {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-        }
-
-        .delete-btn {
-            background: rgba(255, 71, 87, 0.15);
-            color: #ff4757;
-            border: 1px solid rgba(255, 71, 87, 0.3);
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .delete-btn:hover {
-            background: #ff4757;
-            color: #fff;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: rgba(255,255,255,0.5);
-        }
-
-        .empty-state .icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-        }
-
-        .empty-state p {
-            margin-bottom: 8px;
-            font-size: 15px;
-        }
-
-        .task-counter {
-            text-align: center;
-            padding: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 14px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 20px;
-        }
-
-        .task-counter strong {
-            color: #DC4405;
-        }
-
-        .reminder-section {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-
-        .reminder-section h2 {
-            font-size: 18px;
-            color: #fff;
-            margin-bottom: 15px;
-        }
-
-        .reminder-form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .reminder-form select,
-        .reminder-form input {
-            padding: 10px 14px;
-            font-size: 13px;
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 8px;
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-        }
-
-        .reminder-form select option {
-            background: #1a1a1a;
-            color: #fff;
-        }
-
-        .reminder-form select:focus,
-        .reminder-form input:focus {
-            outline: none;
-            border-color: #DC4405;
-        }
-
-        .reminder-form button {
-            padding: 10px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            background: #DC4405;
-            color: #fff;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .reminder-form button:hover {
-            background: #FF6B2B;
-        }
-
-        .reminder-list {
-            margin-top: 15px;
-        }
-
-        .reminder-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin-bottom: 8px;
-            background: rgba(255,255,255,0.03);
-        }
-
-        .reminder-item .reminder-msg {
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .reminder-item .reminder-time {
-            color: rgba(255,255,255,0.4);
-            font-size: 12px;
-        }
-
-        .reminder-item .reminder-task {
-            color: #DC4405;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .no-reminders {
-            color: rgba(255,255,255,0.4);
-            font-size: 13px;
-            text-align: center;
-            padding: 15px;
-        }
-
-        .export-section {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .export-btn {
-            padding: 10px 20px;
-            font-size: 13px;
-            font-weight: 600;
-            border: 1px solid rgba(220, 68, 5, 0.3);
-            border-radius: 8px;
-            background: rgba(220, 68, 5, 0.1);
-            color: #DC4405;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .export-btn:hover {
-            background: #DC4405;
-            color: #fff;
-        }
-
-        .cost-info {
-            text-align: center;
-            margin-top: 20px;
-            padding: 12px;
-            font-size: 12px;
-            color: rgba(255,255,255,0.3);
-        }
-    </style>
+    <title>Busy Beaver — To-Do</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>&#x1F9AB; <span>My To-Do List</span></h1>
-            <button class="help-btn" onclick="toggleHelp()" title="Click for help">?</button>
-        </header>
 
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="toast toast-{{ category }}" data-toast>
+                <span class="toast-icon">{% if category == 'success' %}✓{% else %}⚠{% endif %}</span>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endwith %}
+</div>
+
+<div class="layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-mark">🦫</div>
+            <span>BUSY<strong>BEAVER</strong></span>
+            <button class="help-btn" onclick="toggleHelp()" title="Help">?</button>
+        </div>
+
+        <!-- Help panel -->
         <div class="help-panel" id="helpPanel">
-            <h3>How to Use This App</h3>
+            <div class="help-title">How to use</div>
             <ul>
-                <li><strong>Add a task:</strong> Type in the text box and press Enter or click "Add Task"</li>
-                <li><strong>Complete a task:</strong> Click the checkbox to mark it done</li>
-                <li><strong>Undo completion:</strong> Click the checkbox again to unmark it</li>
-                <li><strong>Delete a task:</strong> Click the red Delete button (you'll be asked to confirm)</li>
-                <li><strong>Set a reminder:</strong> Choose a task, pick a date/time, and click Set Reminder</li>
-                <li><strong>Check weather:</strong> Enter a city name in the weather widget</li>
-                <li><strong>Export tasks:</strong> Click Export to JSON or Export to Text at the bottom</li>
+                <li>Type a task and pick a priority + due date, then click <strong>Add</strong></li>
+                <li>Click the circle to toggle a task done/undone</li>
+                <li>Click <strong>Delete</strong> → <strong>Confirm?</strong> to remove</li>
+                <li>Use the filter tabs or search bar to find tasks</li>
+                <li>Set reminders and check weather in the sidebar</li>
+                <li>Export your tasks to JSON or plain text anytime</li>
             </ul>
-            <button class="close-help" onclick="toggleHelp()">Got it, close help</button>
         </div>
 
-        <p class="app-description">Stay organized. Get things done. Track your progress.</p>
-
-        <div class="widget-row">
-            <div class="widget weather-widget">
-                <div class="widget-title">Weather</div>
-                {% if weather %}
-                    <div class="weather-temp">{{ weather.temperature | round | int }}&deg;F</div>
-                    <div class="weather-desc">{{ weather.conditions }}</div>
-                    <div class="weather-city">{{ weather.city }}</div>
-                    <div class="weather-details">Humidity: {{ weather.humidity }}% | Wind: {{ weather.wind_speed }} mph</div>
-                {% else %}
-                    <div class="weather-unavailable">Weather unavailable</div>
-                {% endif %}
-                <form class="weather-form" action="/weather" method="POST">
-                    <input type="text" name="city" placeholder="Enter city...">
-                    <button type="submit">Go</button>
-                </form>
-            </div>
-
-            <div class="widget stats-widget">
-                <div class="widget-title">Task Statistics</div>
-                {% if stats %}
-                    <div class="stat-number">{{ stats.completion_percentage }}%</div>
-                    <div class="stat-label">Complete</div>
-                    <div class="stat-row">
-                        <span>Total</span>
-                        <span>{{ stats.total_tasks }}</span>
+        <!-- Weather -->
+        <div class="sidebar-card">
+            <div class="card-label">Weather</div>
+            {% if weather %}
+                <div class="weather-row">
+                    <div class="weather-temp">{{ weather.temperature | round | int }}&deg;</div>
+                    <div class="weather-info">
+                        <div class="weather-desc">{{ weather.conditions }}</div>
+                        <div class="weather-city">{{ weather.city }}</div>
                     </div>
-                    <div class="stat-row">
-                        <span>Done</span>
-                        <span>{{ stats.completed_tasks }}</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>Pending</span>
-                        <span>{{ stats.pending_tasks }}</span>
-                    </div>
-                {% else %}
-                    <div class="stat-number">0%</div>
-                    <div class="stat-label">No tasks yet</div>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="main-card">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% for category, message in messages %}
-                    <div class="flash-message flash-{{ category }}">
-                        {% if category == 'success' %}&#10003;{% else %}&#9888;{% endif %} {{ message }}
-                    </div>
-                {% endfor %}
-            {% endwith %}
-
-            <div class="add-section">
-                <label for="task-input">New Task</label>
-                <form action="/add" method="POST" class="input-row">
-                    <input type="text"
-                           id="task-input"
-                           name="task"
-                           placeholder="What needs to be done?"
-                           autofocus>
-                    <button type="submit">Add Task</button>
-                </form>
-                <p class="input-hint">Press Enter or click Add Task to add</p>
-            </div>
-
-            <div class="task-list">
-                {% if tasks %}
-                    {% for task in tasks %}
-                        <div class="task-item {% if task.completed %}completed{% endif %}">
-                            <a href="/complete/{{ task.id }}" class="task-checkbox">
-                                {% if task.completed %}&#9745;{% else %}&#9744;{% endif %}
-                            </a>
-                            <span class="task-text">{{ task.text }}</span>
-                            <span class="task-status {% if task.completed %}status-done{% else %}status-pending{% endif %}">
-                                {% if task.completed %}Done{% else %}Pending{% endif %}
-                            </span>
-                            <button class="delete-btn"
-                                    onclick="if(confirm('Delete this task? This cannot be undone.')) window.location.href='/delete/{{ task.id }}'">
-                                Delete
-                            </button>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="empty-state">
-                        <div class="icon">&#10024;</div>
-                        <p><strong>All clear!</strong></p>
-                        <p>Add a task to get started</p>
-                    </div>
-                {% endif %}
-            </div>
-
-            {% if tasks %}
-                <div class="task-counter">
-                    <strong>{{ tasks|selectattr('completed', 'equalto', false)|list|length }}</strong> of <strong>{{ tasks|length }}</strong> task{% if tasks|length != 1 %}s{% endif %} remaining
                 </div>
+                <div class="weather-sub">💧 {{ weather.humidity }}% &nbsp;·&nbsp; 💨 {{ weather.wind_speed }} mph</div>
+            {% else %}
+                <div class="card-empty">Service unavailable</div>
+            {% endif %}
+            <form class="weather-form" action="/weather" method="POST">
+                <input type="text" name="city" placeholder="Search city..." maxlength="60">
+                <button type="submit">→</button>
+            </form>
+        </div>
+
+        <!-- Stats -->
+        <div class="sidebar-card">
+            <div class="card-label">Productivity</div>
+            {% if stats %}
+                <div class="stat-percent">{{ stats.completion_percentage }}<span>%</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ stats.completion_percentage }}%"></div>
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="stat-n">{{ stats.total_tasks }}</span>
+                        <span class="stat-k">Total</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-n green">{{ stats.completed_tasks }}</span>
+                        <span class="stat-k">Done</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-n orange">{{ stats.pending_tasks }}</span>
+                        <span class="stat-k">Left</span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="stat-percent">0<span>%</span></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+                <div class="card-empty">No tasks yet</div>
             {% endif %}
         </div>
 
-        <div class="reminder-section">
-            <h2>Reminders</h2>
+        <!-- Reminders -->
+        <div class="sidebar-card">
+            <div class="card-label">Reminders</div>
             {% if tasks %}
                 <form class="reminder-form" action="/set_reminder" method="POST">
                     <select name="task_id">
                         {% for task in tasks %}
-                            <option value="{{ task.id }}">{{ task.text }}</option>
+                            <option value="{{ task.id }}">{{ task.text | truncate(34, True, '…') }}</option>
                         {% endfor %}
                     </select>
                     <input type="datetime-local" name="reminder_time" required>
-                    <input type="text" name="message" placeholder="Reminder note...">
-                    <button type="submit">Set Reminder</button>
+                    <input type="text" name="message" placeholder="Optional note…" maxlength="100">
+                    <button type="submit" class="btn-full">Set Reminder</button>
                 </form>
+            {% else %}
+                <div class="card-empty">Add tasks to set reminders.</div>
             {% endif %}
-
-            <div class="reminder-list">
-                {% if reminders %}
+            {% if reminders %}
+                <div class="reminder-list">
                     {% for r in reminders %}
                         <div class="reminder-item">
-                            <div>
-                                <div class="reminder-msg">{{ r.message or 'No message' }}</div>
-                                <div class="reminder-time">{{ r.reminder_time }}</div>
-                                <div class="reminder-task">Task ID: {{ r.task_id }}</div>
+                            <div class="reminder-dot"></div>
+                            <div class="reminder-body">
+                                <div class="reminder-msg">{{ r.message or 'Reminder' }}</div>
+                                <div class="reminder-meta">
+                                    {% set matched = tasks | selectattr('id', 'equalto', r.task_id) | list %}
+                                    {% if matched %}{{ matched[0].text | truncate(26, True, '…') }}{% endif %}
+                                    &nbsp;·&nbsp; {{ r.reminder_time | replace('T', ' ') }}
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
-                {% else %}
-                    <div class="no-reminders">No reminders set</div>
-                {% endif %}
+                </div>
+            {% else %}
+                <div class="card-empty" style="margin-top:10px;">No reminders set</div>
+            {% endif %}
+        </div>
+
+        <!-- Export -->
+        <div class="sidebar-card">
+            <div class="card-label">Export Tasks</div>
+            <div class="export-row">
+                <form action="/export" method="POST">
+                    <input type="hidden" name="format" value="json">
+                    <button type="submit" class="export-btn">↓ JSON</button>
+                </form>
+                <form action="/export" method="POST">
+                    <input type="hidden" name="format" value="text">
+                    <button type="submit" class="export-btn">↓ Text</button>
+                </form>
             </div>
         </div>
 
-        <div class="export-section">
-            <form action="/export" method="POST" style="display:inline;">
-                <input type="hidden" name="format" value="json">
-                <button type="submit" class="export-btn">Export to JSON</button>
-            </form>
-            <form action="/export" method="POST" style="display:inline;">
-                <input type="hidden" name="format" value="text">
-                <button type="submit" class="export-btn">Export to Text</button>
+        <div class="sidebar-footer">Tasks saved locally &nbsp;·&nbsp; Your data stays here</div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="main">
+
+        <!-- Add Task -->
+        <div class="add-card">
+            <form action="/add" method="POST" class="add-form">
+                <div class="add-input-wrap">
+                    <input
+                        type="text"
+                        id="task-input"
+                        name="task"
+                        placeholder="What needs to be done?"
+                        maxlength="100"
+                        autocomplete="off"
+                        autofocus>
+                    <span class="char-count" id="char-count"></span>
+                </div>
+                <div class="add-meta">
+                    <select name="priority" class="meta-select">
+                        <option value="medium">⬤ Medium</option>
+                        <option value="high">⬤ High</option>
+                        <option value="low">⬤ Low</option>
+                    </select>
+                    <input type="date" name="due_date" class="meta-date">
+                    <button type="submit" class="btn-add">+ Add Task</button>
+                </div>
             </form>
         </div>
 
-        <div class="cost-info">
-            Tasks are saved locally. Your data stays on this device.
+        <!-- Filter bar -->
+        <div class="filter-bar">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">
+                    All <span class="tab-n">{{ tasks|length }}</span>
+                </button>
+                <button class="filter-tab" data-filter="pending">
+                    Pending <span class="tab-n">{{ tasks|selectattr('completed', 'equalto', false)|list|length }}</span>
+                </button>
+                <button class="filter-tab" data-filter="done">
+                    Done <span class="tab-n">{{ tasks|selectattr('completed', 'equalto', true)|list|length }}</span>
+                </button>
+            </div>
+            <input type="text" id="task-search" class="search-input" placeholder="Search tasks…">
         </div>
+
+        <!-- Task list -->
+        <div class="task-list" id="task-list">
+            {% if tasks %}
+                {% for task in tasks %}
+                    <div class="task-card {% if task.completed %}completed{% endif %} priority-{{ task.priority }}"
+                         data-done="{{ 'true' if task.completed else 'false' }}"
+                         data-text="{{ task.text | lower }}">
+                        <a href="/complete/{{ task.id }}" class="task-check" title="Toggle complete">
+                            <span class="check-circle">{% if task.completed %}✓{% endif %}</span>
+                        </a>
+                        <div class="task-body">
+                            <div class="task-text">{{ task.text }}</div>
+                            <div class="task-badges">
+                                <span class="badge priority-badge-{{ task.priority }}">{{ task.priority }}</span>
+                                {% if task.due_date %}
+                                    <span class="badge due-badge">📅 {{ task.due_date }}</span>
+                                {% endif %}
+                                <span class="badge status-badge {% if task.completed %}done{% else %}pending{% endif %}">
+                                    {% if task.completed %}Done{% else %}Pending{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <button class="delete-btn" data-href="/delete/{{ task.id }}">Delete</button>
+                    </div>
+                {% endfor %}
+                <div id="filtered-empty" class="empty-state" style="display:none;">
+                    <div class="empty-icon">🔍</div>
+                    <p>No tasks match</p>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">✨</div>
+                    <p><strong>All clear!</strong></p>
+                    <p>Add your first task above to get started</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if tasks %}
+            <div class="task-footer">
+                <strong class="accent">{{ tasks|selectattr('completed', 'equalto', false)|list|length }}</strong>
+                of <strong>{{ tasks|length }}</strong>
+                task{% if tasks|length != 1 %}s{% endif %} remaining
+                <form action="/delete/all" method="POST" id="delete-all-form" style="display:inline;">
+                    <button type="button" class="delete-all-btn" id="delete-all-btn">Delete All</button>
+                </form>
+            </div>
+        {% endif %}
+    </main>
+
+</div>
+
+<div id="beaver-container">
+  <div id="beaver-label">GO BEAVS!</div>
+  <div id="beaver-row">
+    <div id="log-pile-wrap" title="Click to clear the pile!">
+      <div id="log-pile-label">CLEAR!</div>
+      <canvas id="log-pile-canvas"></canvas>
     </div>
+    <canvas id="beaver-canvas" title="Oregon State Beaver"></canvas>
+  </div>
+</div>
 
-    <script>
-        function toggleHelp() {
-            var helpPanel = document.getElementById('helpPanel');
-            helpPanel.classList.toggle('show');
-        }
-    </script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/beaver.js') }}"></script>
 </body>
 </html>
