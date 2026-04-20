@@ -801,7 +801,7 @@ a      { color: inherit; text-decoration: none; }
 #plant-wrap {
   position: fixed;
   bottom: 8px;
-  left: 16px;
+  right: 130px;
   z-index: 100;
   cursor: default;
 }
