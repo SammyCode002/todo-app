@@ -2,6 +2,8 @@
 
 > **CS 361 class project, redesigned.** Originally built as 4 separate Flask microservices (weather, stats, reminders, export). Refactored into a single Flask + SQLAlchemy app after the course ended, with a full pixel-art cozy redesign and an animated Oregon State beaver.
 
+![Busy Beaver To-Do screenshot](static/img/screenshot.png)
+
 ## Features
 
 - Add, complete, and delete tasks with priority levels and due dates
@@ -65,7 +67,8 @@ todo_app_CS361/
 │   ├── js/app.js           # Filters, search, two-click delete
 │   ├── js/beaver.js        # Sprite sheet animation
 │   └── img/
-│       └── beaver_spritesheet.png
+│       ├── beaver_spritesheet.png
+│       └── screenshot.png
 └── .env                    # Not committed
 ```
 
