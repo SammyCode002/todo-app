@@ -4,7 +4,7 @@
 
 > 🎌 *Inspired by Golden Boy Episode 1 - Kintaro's iconic UI design, complete with a growing plant and a beaver who tells you to study.*
 
-![Busy Beaver To-Do screenshot](static/img/screenshot.png)
+![Busy Beaver To-Do screenshot](static/img/screenshot_v2.png)
 
 ## Features
 
