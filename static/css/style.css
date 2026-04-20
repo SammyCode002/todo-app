@@ -797,6 +797,20 @@ a      { color: inherit; text-decoration: none; }
   .search-input  { width: 100%; }
 }
 
+/* ── Plant ──────────────────────────────────────────────────────────────── */
+#plant-wrap {
+  position: fixed;
+  bottom: 8px;
+  left: 16px;
+  z-index: 100;
+  cursor: default;
+}
+
+#plant-canvas {
+  display: block;
+  image-rendering: pixelated;
+}
+
 /* ── Beaver ─────────────────────────────────────────────────────────────── */
 #beaver-container {
   position: fixed;
