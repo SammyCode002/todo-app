@@ -10,7 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Help panel toggle ────────────────────────────────────────────────
     window.toggleHelp = () => {
-        document.getElementById('helpPanel').classList.toggle('show');
+        const panel  = document.getElementById('helpPanel');
+        const bubble = document.getElementById('beaver-bubble');
+        const opening = !panel.classList.contains('show');
+        panel.classList.toggle('show');
+        if (opening && bubble) {
+            bubble.classList.add('show');
+            if (window.beaverHelp) window.beaverHelp();
+            setTimeout(() => bubble.classList.remove('show'), 2800);
+        }
     };
 
     // ── Filter tabs ──────────────────────────────────────────────────────

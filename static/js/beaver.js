@@ -209,6 +209,8 @@
   canvas.addEventListener('click', () => triggerBusy(ROWS.BITE));
   canvas.style.cursor = 'pointer';
 
+  window.beaverHelp = () => triggerBusy(ROWS.BITE);
+
   // ── Start ─────────────────────────────────────────────────────────────────
   requestAnimationFrame(loop);
   scheduleScurry();
