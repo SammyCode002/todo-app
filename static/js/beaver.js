@@ -233,6 +233,7 @@
     chopTicks   = 0;
     scurryX     = -canvas.width;
     container.style.bottom = '8px';
+    container.style.right  = 'auto';
 
     // 50% chance to stop at a tree somewhere in the middle third of the screen
     if (Math.random() < 0.5) {
