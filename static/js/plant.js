@@ -42,8 +42,8 @@
       const x = 4 + Math.floor((28 - w) / 2);
       px(x, 42 + i, '#5bb8d4', w, 1);
     });
-    // Highlight
-    px(5, 42, '#a8dff0', 2, 8);
+    // Highlight (only 2 rows -- pot body starts at x=5 for first 2 rows only)
+    px(5, 42, '#a8dff0', 2, 2);
     // Bottom
     px(11, 51, '#3a8aaa', 14, 1);
   }

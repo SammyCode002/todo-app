@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteAllBtn.addEventListener('click', () => {
             if (deleteAllBtn.classList.contains('confirming')) {
                 clearTimeout(timer);
+                localStorage.setItem('bb_plant', '0');
                 document.getElementById('delete-all-form').submit();
             } else {
                 deleteAllBtn.classList.add('confirming');
