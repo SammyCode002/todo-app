@@ -2,7 +2,7 @@
 
 > **CS 361 class project, redesigned.** Originally built as 4 separate Flask microservices (weather, stats, reminders, export). Refactored into a single Flask + SQLAlchemy app after the course ended, with a full pixel-art cozy redesign and an animated Oregon State beaver.
 
-> 🎌 *Inspired by Golden Boy Episode 1 — Kintaro's iconic UI design, complete with a growing plant and a beaver who tells you to study.*
+> 🎌 *Inspired by Golden Boy Episode 1 - Kintaro's iconic UI design, complete with a growing plant and a beaver who tells you to study.*
 
 ![Busy Beaver To-Do screenshot](static/img/screenshot.png)
 
@@ -14,7 +14,7 @@
 - Weather widget via OpenWeatherMap (search any city)
 - Reminders with datetime and optional note
 - Export tasks to JSON or plain text
-- Animated pixel-art beaver mascot — randomly scurries across the screen and stops to chop logs
+- Animated pixel-art beaver mascot - randomly scurries across the screen and stops to chop logs
 - Pixel-art plant that grows a new leaf and flowers as you complete tasks
 
 ## Stack
