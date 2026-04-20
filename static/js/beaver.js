@@ -86,13 +86,48 @@
 
   logWrap.addEventListener('click', clearLogs);
 
+  // ── Tree sprite (row 5 col 1 on sheet) ───────────────────────────────────
+  const TREE_SX = 32;
+  const TREE_SY = 160;
+
+  let treeCanvas = null;
+
+  function spawnTree(screenX) {
+    if (treeCanvas) treeCanvas.remove();
+    treeCanvas = document.createElement('canvas');
+    treeCanvas.width  = FRAME_W * SCALE;
+    treeCanvas.height = FRAME_H * SCALE;
+    treeCanvas.style.cssText =
+      `position:fixed;bottom:${8}px;left:${screenX}px;` +
+      `image-rendering:pixelated;z-index:998;pointer-events:none;`;
+    const tc = treeCanvas.getContext('2d');
+    tc.imageSmoothingEnabled = false;
+    sheet.onload = () => {
+      tc.drawImage(sheet, TREE_SX, TREE_SY, FRAME_W, FRAME_H,
+                   0, 0, FRAME_W * SCALE, FRAME_H * SCALE);
+    };
+    if (loaded) {
+      tc.drawImage(sheet, TREE_SX, TREE_SY, FRAME_W, FRAME_H,
+                   0, 0, FRAME_W * SCALE, FRAME_H * SCALE);
+    }
+    document.body.appendChild(treeCanvas);
+  }
+
+  function removeTree() {
+    if (treeCanvas) { treeCanvas.remove(); treeCanvas = null; }
+  }
+
   // ── Beaver state ──────────────────────────────────────────────────────────
-  let state      = 'idle';
-  let tick       = 0;
-  let busyTicks  = 0;
-  let busyRow    = ROWS.BITE;
-  let scurrying  = false;
-  let scurryX    = 0;
+  let state       = 'idle';
+  let tick        = 0;
+  let busyTicks   = 0;
+  let busyRow     = ROWS.BITE;
+  let scurrying   = false;
+  let scurryX     = 0;
+  let scurryPhase = 'run'; // 'run' | 'chop' | 'resume'
+  let chopTicks   = 0;
+  let treeStopX   = -1;
+  const CHOP_DURATION = 72;
 
   function drawFrame(row, frameIndex) {
     if (!loaded) return;
@@ -115,19 +150,54 @@
     tick++;
 
     if (scurrying) {
-      scurryX += 3;
-      container.style.left  = scurryX + 'px';
-      container.style.right = 'auto';
-      drawFrame(ROWS.MOVE_STICK, frameAt(tick));
+      if (scurryPhase === 'run') {
+        scurryX += 3;
+        container.style.left = scurryX + 'px';
+        drawFrame(ROWS.MOVE_STICK, frameAt(tick));
 
-      if (scurryX > window.innerWidth + 64) {
-        scurrying = false;
-        container.style.left   = 'auto';
-        container.style.right  = '16px';
-        container.style.bottom = '8px';
-        state     = 'idle';
-        tick      = 0;
-        scheduleScurry();
+        if (treeStopX >= 0 && scurryX >= treeStopX) {
+          scurryPhase = 'chop';
+          chopTicks   = 0;
+          tick        = 0;
+        } else if (scurryX > window.innerWidth + 64) {
+          removeTree();
+          scurrying   = false;
+          scurryPhase = 'run';
+          treeStopX   = -1;
+          container.style.left   = 'auto';
+          container.style.right  = '16px';
+          container.style.bottom = '8px';
+          state = 'idle';
+          tick  = 0;
+          scheduleScurry();
+        }
+
+      } else if (scurryPhase === 'chop') {
+        drawFrame(ROWS.BITE, frameAt(tick));
+        chopTicks++;
+        if (chopTicks >= CHOP_DURATION) {
+          removeTree();
+          scurryPhase = 'resume';
+          tick        = 0;
+        }
+
+      } else {
+        // resume running
+        scurryX += 3;
+        container.style.left = scurryX + 'px';
+        drawFrame(ROWS.MOVE_STICK, frameAt(tick));
+
+        if (scurryX > window.innerWidth + 64) {
+          scurrying   = false;
+          scurryPhase = 'run';
+          treeStopX   = -1;
+          container.style.left   = 'auto';
+          container.style.right  = '16px';
+          container.style.bottom = '8px';
+          state = 'idle';
+          tick  = 0;
+          scheduleScurry();
+        }
       }
 
     } else if (state === 'busy') {
@@ -158,9 +228,21 @@
   // ── Scurry ────────────────────────────────────────────────────────────────
   function startScurry() {
     if (state !== 'idle') { scheduleScurry(); return; }
-    scurrying = true;
-    scurryX   = -canvas.width;
+    scurrying   = true;
+    scurryPhase = 'run';
+    chopTicks   = 0;
+    scurryX     = -canvas.width;
     container.style.bottom = '8px';
+
+    // 50% chance to stop at a tree somewhere in the middle third of the screen
+    if (Math.random() < 0.5) {
+      const minX = Math.floor(window.innerWidth * 0.25);
+      const maxX = Math.floor(window.innerWidth * 0.65);
+      treeStopX = minX + Math.floor(Math.random() * (maxX - minX));
+      spawnTree(treeStopX);
+    } else {
+      treeStopX = -1;
+    }
   }
 
   function scheduleScurry() {
